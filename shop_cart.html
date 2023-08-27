@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>購物車</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            box-sizing: border-box;
+        }
+        .shop_cart{
+            max-width: 1000px;
+            margin: auto;
+            background-color: #f3e9e9;
+            padding: 2rem;
+            border-radius: 5rem;
+        }
+        .shop_cart h1{
+            margin: 2rem 0;
+        }
+        .sort_name{
+            width: 100%;
+            display: flex;
+            border-bottom: 1px solid #333;
+        }
+        .sort_name>li{
+            width: 20%;
+            text-align: center;
+        }
+        .sort_name li:first-child{
+            width: 30%;
+        }
+        .card{
+            margin: 2rem 0;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+        } 
+        .card>div{
+            width: 20%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card div:first-child {
+            width: 30%;
+            justify-content: space-around;
+        }
+        .card div:last-child{
+            width: 10%;
+        }
+        .product_name img{
+            width: 7rem;
+            vertical-align: top;
+        }
+        .cancel_icon{
+            cursor: pointer;
+        }
+        .cancel_icon img{
+            width: 2.5rem;
+        }
+
+        .count >*{
+            width: 20%;
+            background-color: #e1dada;
+            text-align: center;
+            outline: none;
+            border: none;
+            padding: 0.5em ;
+        }
+        .count .btn{
+            cursor: pointer;
+        }
+        .minus{
+            border-radius: 1em 0 0 1em;
+        }
+        .plus{
+            border-radius: 0 1em 1em 0;
+        }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none;
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance:textfield;
+        }
+    </style>
+</head>
+<body>
+   <div id="app">
+        <div class="shop_cart">
+            <h1>購物車</h1>
+            <div class="sort_name">
+                <li>產品</li>
+                <li>價錢</li>
+                <li>數量</li>
+                <li>小計</li>
+            </div>
+            <div class="cart_content">
+                <ul>
+                    <li v-for="(prod,index) in shopCartData" :key="index">
+                        <div class="card">
+                            <div class="product_name">
+                                <img :src="prod.imgURL" alt="">
+                                <span>{{prod.name}}</span>
+                            </div>
+                            <div class="price">NTD{{prod.price}}</div>
+                            <div class="count">
+                                <input type="button" value="-" class="btn minus" @click="minusBtn(prod)">
+                                <input type="number" v-model="prod.count">
+                                <input type="button" value="+" class="btn plus"  @click="plusBtn(prod)">
+                            </div>
+                            <div class="product_price">NTD{{calculatePrice(prod.price, prod.count)}}</div>
+                            <div class="cancel_icon" @click="deleteProduct(index)"><img src="./image/delete_trash_icon.png" alt=""></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+   </div>
+    
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    Vue.createApp({
+        data(){
+            return{
+                shopCartData:[
+                    {
+                        imgURL:'./image/dolphin_doll.png',
+                        name:'海豚玩偶',
+                        price:'890',
+                        count: 1
+                    },
+                    {
+                        imgURL:'./image/ocean_tshirt.jpg',
+                        name:'海洋t-shirt',
+                        price:'690',
+                        count: 1
+                    },
+                    {
+                        imgURL:'./image/shark_doll.jpg',
+                        name:'鯊魚玩偶',
+                        price:'600',
+                        count: 1
+                    },
+                    {
+                        imgURL:'./image/seagull_tshirt.png',
+                        name:'海鷗t-shirt',
+                        price:'680',
+                        count: 1
+                    },
+                ]
+            }
+        },
+        computed:{
+
+        },
+        methods:{
+            minusBtn(prod){
+                // 禁止購物車數量小於1
+                if (prod.count == 1) return
+                prod.count -= 1
+            },
+            plusBtn(prod){
+                prod.count += 1
+            },
+            deleteProduct(index){
+                this.shopCartData.splice(index,1)
+            },
+            calculatePrice(price,count){
+                return price * count;
+            }
+        }
+    }).mount("#app");
+</script>
+</body>
+</html>
