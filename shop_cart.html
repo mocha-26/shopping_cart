@@ -16,6 +16,9 @@
             background-image: url(./image/beach.jpg);
             background-size: cover;
         }
+        input[type=checkbox]{
+            vertical-align: middle;
+        }
         .shop_cart{
             max-width: 1000px;
             margin: auto;
@@ -59,14 +62,14 @@
             width: 10%;
         }
         .product_name img{
-            width: 7rem;
+            width: 6rem;
             vertical-align: top;
         }
         .cancel_icon{
             cursor: pointer;
         }
         .cancel_icon img{
-            width: 2.5rem;
+            width: 2rem;
         }
 
         .count >*{
@@ -92,7 +95,8 @@
             margin: 0; 
         }
         input[type=number] {
-            -moz-appearance:textfield;
+            /* firefox */
+            -moz-appearance:textfield; 
         }
         .cart_null{
             text-align: center;
@@ -129,9 +133,9 @@
                 </div>
                 <ul v-else>
                     <li v-for="(prod,index) in shopCartData" :key="index">
-                        <div class="card">
-                            <label><input type="checkbox" v-model="prod.select"></label>
+                        <div class="card">  
                             <div class="product_name">
+                                <label><input type="checkbox" v-model="prod.select"></label>
                                 <img :src="prod.imgURL" alt="">
                                 <span>{{prod.name}}</span>
                             </div>
@@ -228,7 +232,6 @@
                         this.shopCartData = this.shopCartData.filter(prod => !prod.select);
                     },
                     toggleSelectAll() {
-                        // 根据全选状态设置所有商品的选择状态
                         this.shopCartData.forEach(prod => prod.select = this.selectAll);
                     }
                 }
