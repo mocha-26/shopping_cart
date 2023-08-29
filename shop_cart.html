@@ -11,14 +11,23 @@
             padding: 0;
             list-style: none;
             box-sizing: border-box;
+            color: #23344E;
+        }
+        body{
+            background-image: url(./image/beach.jpg);
+            background-size: cover;
+        }
+        input[type=checkbox]{
+            vertical-align: middle;
         }
 
         .shop_cart {
             max-width: 1000px;
             margin: auto;
-            background-color: #f3e9e9;
+            box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;;
             padding: 2rem;
             border-radius: 5rem;
+            background-color: #fff;
         }
 
         .shop_cart h1 {
@@ -28,7 +37,7 @@
         .sort_name {
             width: 100%;
             display: flex;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.6);
         }
 
         .sort_name>li {
@@ -42,7 +51,7 @@
 
         .card {
             margin: 2rem 0;
-            border-bottom: 1px solid #222;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.16);
             display: flex;
             align-items: center;
         }
@@ -62,18 +71,16 @@
         .card div:last-child {
             width: 10%;
         }
-
-        .product_name img {
-            width: 7rem;
+        .product_name img{
+            width: 6rem;
             vertical-align: top;
         }
 
         .cancel_icon {
             cursor: pointer;
         }
-
-        .cancel_icon img {
-            width: 2.5rem;
+        .cancel_icon img{
+            width: 2rem;
         }
 
         .count>* {
@@ -104,52 +111,24 @@
         }
 
         input[type=number] {
-            -moz-appearance: textfield;
+            /* firefox */
+            -moz-appearance:textfield; 
         }
-
-        .checkout {
-            max-width: 1000px;
-            margin: auto;
-            background-color: #DBDBE5;
-            padding: 2rem;
-            border-radius: 2rem;
-            display: flex;
-            border: 2px solid black;
-            align-items: flex-start;
-            justify-content: space-around;
+        .cart_null{
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin: 2rem;
         }
-
-        .test {
-            display: flex;
-            flex-direction: column;
-            width: 50%;
+        .product_count{
+            text-align: right;
+            margin: 1rem 0;
         }
-
-        .test .item {
-            margin: 10px;
-        }
-
-        .test2 {
-            width: 50%;
-
-        }
-
-        .test2 button {
-            width: 80%;
-            background-color: #68769A;
-            border: none;
-            color: white;
-            padding: 5px;
-        }
-
-        h2 {
-            display: inline;
-            margin-right: 100px;
-        }
-
-        .test2 .item {
-            margin-bottom: 10px;
-
+        .deleteSelect{
+            cursor: pointer;
+            border-bottom: 1px solid #666;
+            position: relative;
+            margin-left: 2rem;
         }
     </style>
 </head>
@@ -158,6 +137,7 @@
     <div id="app">
         <div class="shop_cart">
             <h1>購物車</h1>
+            <p class="product_count">總共有{{prodCount}}件商品</p>
             <div class="sort_name">
                 <li>產品</li>
                 <li>價錢</li>
@@ -165,25 +145,30 @@
                 <li>小計</li>
             </div>
             <div class="cart_content">
-                <ul>
+                <div v-if="prodCount === 0" class="cart_null">
+                    您的購物車是空的
+                </div>
+                <ul v-else>
                     <li v-for="(prod,index) in shopCartData" :key="index">
-                        <div class="card">
+                        <div class="card">  
                             <div class="product_name">
+                                <label><input type="checkbox" v-model="prod.select"></label>
                                 <img :src="prod.imgURL" alt="">
                                 <span>{{prod.name}}</span>
                             </div>
                             <div class="price">NTD{{prod.price}}</div>
                             <div class="count">
                                 <input type="button" value="-" class="btn minus" @click="minusBtn(prod)">
-                                <input type="number" v-model="prod.count">
-                                <input type="button" value="+" class="btn plus" @click="plusBtn(prod)">
+                                <input type="number" v-model="prod.count" @input="handleCountInput(prod)">
+                                <input type="button" value="+" class="btn plus"  @click="plusBtn(prod)">
                             </div>
-                            <div class="product_price">NTD{{calculatePrice(prod.price, prod.count)}}</div>
-                            <div class="cancel_icon" @click="deleteProduct(index)"><img
-                                    src="./image/delete_trash_icon.png" alt=""></div>
+                            <div class="product_price">NTD{{calculatePrice[index]}}</div>
+                            <div class="cancel_icon" @click="deleteProduct(index)"><img src="./image/delete_trash_icon.png" alt=""></div>
                         </div>
                     </li>
                 </ul>
+                <label><input type="checkbox" v-model="selectAll" @change="toggleSelectAll" class="selectAll">全選({{selectedCount}})</label>
+                <span @click="deleteSelected" class="deleteSelect">刪除已選物品</span>
             </div>
 
             <div class="checkout">
