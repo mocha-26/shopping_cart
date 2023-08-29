@@ -146,10 +146,9 @@
             display: inline;
             margin-right: 100px;
         }
-
-        .test2 .item {
+        .test2 .item{
             margin-bottom: 10px;
-
+           
         }
     </style>
 </head>
@@ -190,11 +189,11 @@
                 <div class="test">
                     <h2>選擇運送方式</h2>
                     <div class="item">
-                        <input name="transport" id="7-11" type="radio" value="60" v-model="picked">
+                        <input name="transport" id="7-11" type="radio">
                         <label for="7-11">711 店到店 + 60元</label>
                     </div>
                     <div class="item">
-                        <input name="transport" id="free" type="radio" value="0" v-model="picked">
+                        <input name="transport" id="free" type="radio">
                         <label for="free">到園領取 FREE</label>
                     </div>
                 </div>
@@ -202,7 +201,7 @@
                 <div class="test2">
                     <div class="item">
                         <h2>商品金額</h2><span>1350</span>
-                        <p>運費: {{ picked }}</p>
+                        <p>運費<span>0</span></p>
                         <P>總計<span>1350</span></P>
                     </div>
                     <button>前往結帳</button>
@@ -211,7 +210,6 @@
 
             </div>
 
-            
 
         </div>
     </div>
@@ -245,19 +243,10 @@
                             price: '680',
                             count: 1
                         },
-                        {
-                            selectedTransport: '7-11',
-                            productAmount: 1350,
-                            shippingCost: 0,
-                            totalAmount: 1350
-                        }
-                    ],
-                    picked: 0
+                    ]
                 }
             },
-
             computed: {
-
 
             },
             methods: {
