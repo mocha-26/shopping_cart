@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>購物車</title>
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
             list-style: none;
@@ -19,7 +20,8 @@
         input[type=checkbox]{
             vertical-align: middle;
         }
-        .shop_cart{
+
+        .shop_cart {
             max-width: 1000px;
             margin: auto;
             box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;;
@@ -27,73 +29,87 @@
             border-radius: 5rem;
             background-color: #fff;
         }
-        .shop_cart h1{
+
+        .shop_cart h1 {
             margin: 2rem 0;
         }
-        .sort_name{
+
+        .sort_name {
             width: 100%;
             display: flex;
             border-bottom: 1px solid rgba(0, 0, 0, 0.6);
         }
-        .sort_name>li{
+
+        .sort_name>li {
             width: 20%;
             text-align: center;
         }
-        .sort_name li:first-child{
+
+        .sort_name li:first-child {
             width: 30%;
         }
-        .card{
+
+        .card {
             margin: 2rem 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.16);
             display: flex;
             align-items: center;
-        } 
-        .card>div{
+        }
+
+        .card>div {
             width: 20%;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .card div:first-child {
             width: 30%;
             justify-content: space-around;
         }
-        .card div:last-child{
+
+        .card div:last-child {
             width: 10%;
         }
         .product_name img{
             width: 6rem;
             vertical-align: top;
         }
-        .cancel_icon{
+
+        .cancel_icon {
             cursor: pointer;
         }
         .cancel_icon img{
             width: 2rem;
         }
 
-        .count >*{
+        .count>* {
             width: 20%;
             background-color: #e1dada;
             text-align: center;
             outline: none;
             border: none;
-            padding: 0.5em ;
+            padding: 0.5em;
         }
-        .count .btn{
+
+        .count .btn {
             cursor: pointer;
         }
-        .minus{
+
+        .minus {
             border-radius: 1em 0 0 1em;
         }
-        .plus{
+
+        .plus {
             border-radius: 0 1em 1em 0;
         }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
-            margin: 0; 
+            margin: 0;
         }
+
         input[type=number] {
             /* firefox */
             -moz-appearance:textfield; 
@@ -117,10 +133,60 @@
         .selectAll{
             margin-left: 1rem;
         }
+        .checkout {
+            max-width: 1000px;
+            margin: auto;
+            margin-top: 5rem;
+            background-color: #DBDBE5;
+            padding: 2rem;
+            border-radius: 2rem;
+            display: flex;
+            border: 2px solid black;
+            align-items: flex-start;
+            justify-content: space-around;
+        }
+
+        .test {
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+        }
+
+        .test .item {
+            margin: 10px;
+        }
+
+        .test2 {
+            width: 50%;
+
+        }
+
+        .test2 button {
+            width: 80%;
+            background-color: #68769A;
+            border: none;
+            color: white;
+            padding: 5px;
+        }
+
+        h2 {
+            display: inline;
+            margin-right: 100px;
+        }
+        .test2 .item{
+            margin-bottom: 10px;
+        }
+        .test2 .item>*{
+            margin: 10px 0;
+        }
+        .freight{
+            border-bottom: 1.5px solid #666;
+        }
     </style>
 </head>
+
 <body>
-   <div id="app">
+    <div id="app">
         <div class="shop_cart">
             <h1>購物車</h1>
             <p class="product_count">總共有{{prodCount}}件商品</p>
@@ -155,6 +221,30 @@
                 </ul>
                 <label><input type="checkbox" v-model="selectAll" class="selectAll">全選({{selectedCount}})</label>
                 <span @click="deleteSelected" class="deleteSelect">刪除已選物品</span>
+            </div>
+
+            <div class="checkout">
+                <div class="test">
+                    <h2>選擇運送方式</h2>
+                    <div class="item">
+                        <input name="transport" id="7-11" type="radio" value="60" v-model="picked">
+                        <label for="7-11">711 店到店 + 60元</label>
+                    </div>
+                    <div class="item">
+                        <input name="transport" id="free" type="radio" value="0" v-model="picked">
+                        <label for="free">到園領取 FREE</label>
+                    </div>
+                </div>
+
+                <div class="test2">
+                    <div class="item">
+                        <h2>商品金額:</h2><span>{{allProduct_Price}}</span>
+                        <p class="
+                        freight">運費:{{ picked }}</p>
+                        <p>總計:<span>{{allProduct_Price+ parseInt(picked)}}</span></p>
+                    </div>
+                    <button>前往結帳</button>
+                </div>
             </div>
         </div>
    </div>
@@ -193,7 +283,8 @@
                                 count: 1,
                                 select:false
                             },
-                        ]
+                        ],
+                        picked: 0
                     }
                 },
                 computed:{
@@ -213,6 +304,11 @@
                         set(value) {
                             this.shopCartData.forEach(prod => {prod.select = value;});
                         }
+                    },
+                    allProduct_Price(){
+                        return this.shopCartData.reduce((total,prod)=>{
+                            return total+(prod.price*prod.count);
+                        },0);
                     }
                     
                 },
@@ -241,10 +337,9 @@
                     deleteSelected(){
                         // 過濾出已勾選的商品並刪除它們
                         this.shopCartData = this.shopCartData.filter(prod => !prod.select);
-                    },
-                 
+                    }
                 }
-            }).mount("#app");
-        </script>
-    </body>
+        }).mount("#app");
+    </script>
+</body>
 </html>

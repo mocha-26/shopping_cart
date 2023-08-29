@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shopping cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="carts/index.css">
+    <link rel="stylesheet" href="carts/products.css">
+    <link rel="stylesheet" href="carts/info.css">
+</head>
+<body>
+    <div id="app">
+        <div class="commom wrapper">
+            <main class="tabs">
+                <div class="tabsList">
+                    <div class="commom tabsItem"
+                        v-for="(item, key) in tabItems"
+                        :class="{active: key == tabActive}"
+                        @click="updateTab(key)"
+                    >
+                        {{item}}
+                    </div>
+                </div>
+                <div class="commom tabsContent">
+                    <div v-if="tabActive == 2" class="tabsWrapper">
+                        <div 
+                            v-for="(item, index) in cartList" 
+                            :key="item.id" 
+                            class="products"
+                        >
+                            <img :src="`carts/img/${item.id}.png`" :alt="item.name">   
+                            <div class="commom box">
+                                <div class="box-info">
+                                    <h6>
+                                        {{item.name}}
+                                    </h6>
+                                    <div class="row">
+                                        <button class="arrow left" @click="reduceCart(index)"></button>
+                                        <input type="number" v-model="item.count" class="commom"/>
+                                        <button class="arrow right" @click="addCart(index)"></button>
+                                    </div>
+                                </div>
+                                <div class="box-price">
+                                    <h6>
+                                        💰{{parseNumerDisplay(item.price)}}
+                                    </h6>
+                                    <div class="row">
+                                        💰{{parseNumerDisplay(item.price*item.count)}}
+                                        <button class="remove" @click="removeCart(index)"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <aside>
+                <div class="info checkout" v-if="tabActive == 2">
+                    <div>
+                        <div class="row">
+                            <h6 class="info_label">總共</h6>
+                            <div>💰<span class="commom price">{{parsePrice}}</span></div>
+                        </div>
+                    </div>
+                    <button class="commom commit">結帳</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="vue.global.js"></script>
+    <script src="carts/cartList.js"></script>
+    <script>
+        const App = Vue.createApp({
+            data() {
+                return {
+                    tabActive: 2,
+                    tabItems: {
+                        1: '買入',
+                        2: '購物車'
+                    },
+                    //將購物車清單先放在外js -> carts/cartList.js
+                    cartList: cartList
+                }
+            },
+            computed: {
+                parsePrice(){
+                    if(this.cartList.length === 0) return `0文`
+                    //寫法一
+                    let total = 0
+                    for (let index = 0; index < this.cartList.length; index++) {
+                        const accumulator = this.cartList[index]['price'] * this.cartList[index]['count']
+                        total += accumulator 
+                    }
+                    //寫法二
+                    // const total = this.cartList.reduce((accumulator, currentValue) =>{
+                    //     return accumulator + (currentValue.price * currentValue.count)
+                    // }, 0) // initialValue
+                    return this.parseNumerDisplay(total)
+                }
+            },
+            methods: {
+                // 切換tab
+                updateTab (index) {
+                    this.tabActive = index
+                },
+                // 轉換貨幣
+                parseNumerDisplay(num){
+                    const main = Math.round(num/1000)
+                    const sub = num%1000
+                    if(main> 0)return `${main}兩${sub}文`
+                    return `${sub}文`
+                },
+                reduceCart(index){
+                    //禁止購物車數量<0
+                    if(this.cartList[index]['count'] == 0) return
+                    this.cartList[index]['count'] -= 1
+                },
+                addCart(index){
+                    //禁止購物車數量>商品庫存數量
+                    if(this.cartList[index]['count'] === this.cartList[index]['stock']) return
+                    this.cartList[index]['count']+= 1
+                },
+                removeCart(index){
+                    this.cartList.splice(index, 1)
+                }
+            }
+        })
+
+        App.mount('#app')
+    </script>
+</body>
+</html>
